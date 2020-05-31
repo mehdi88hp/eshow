@@ -5,5 +5,6 @@
 @endsection
 
 @section('scripts')
+    <script src="{{asset('tinymce/tinymce.min.js')}}" referrerpolicy="origin"></script>
 @endsection
 

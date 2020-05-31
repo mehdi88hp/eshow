@@ -8,7 +8,11 @@ import vuetify from './plugins/vuetify' // path to vuetify export
 import App from './components/App'
 import router from './router'
 import store from './store';
+import CKEditor from '@ckeditor/ckeditor5-vue';
 
+window.tinymce = require('tinymce/tinymce');
+
+Vue.use(CKEditor);
 
 new Vue({
     vuetify,

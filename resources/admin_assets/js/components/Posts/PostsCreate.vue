@@ -1,33 +1,38 @@
 <template>
-    <v-col cols="12" sm="6" md="6">
-        <v-text-field
-            label="عنوان"
-            reverse
-        ></v-text-field>
+    <div>
+        <v-row justify="center">
+            <v-col sm="2">
+                <label> عنوان</label>
+            </v-col>
+            <v-col cols="12" sm="5" md="5">
+                <v-text-field
+                    label="عنوان"
+                    reverse
+                ></v-text-field>
+            </v-col>
+        </v-row>
+        <v-row justify="center">
+            <v-col sm="2">
+                <label>متن</label>
+            </v-col>
+            <v-col cols="12" sm="5" md="5" >
+                <my-editor></my-editor>
+            </v-col>
+        </v-row>
+    </div>
 
-        <textarea id="mytextarea">Hello, World!</textarea>
-    </v-col>
 </template>
 
 <script>
-    import Editor from '@tinymce/tinymce-vue'
-    // Import TinyMCE
-    import tinymce from 'tinymce/tinymce';
-    // A theme is also required
-    import 'tinymce/themes/silver';
 
+
+    import MyEditor from "../Layouts/my-editor";
 
     export default {
         name: "PostsCreate",
-        components: {
-            'editor': Editor
-        },
-        created() {
-            // Initialize the app
-            tinymce.init({
-                selector: '#mytextarea',
-                // plugins: ['paste', 'link']
-            });
+        components: {MyEditor},
+        mounted() {
+
         }
     }
 </script>
