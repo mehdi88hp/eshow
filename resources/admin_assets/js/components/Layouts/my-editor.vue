@@ -1,7 +1,6 @@
 <template>
     <div id="my-editor">
         <ckeditor :editor="editor" @ready="onReady" v-model="textValue"></ckeditor>
-
     </div>
 </template>
 
