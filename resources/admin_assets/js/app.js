@@ -10,8 +10,6 @@ import router from './router'
 import store from './store';
 import CKEditor from '@ckeditor/ckeditor5-vue';
 
-window.tinymce = require('tinymce/tinymce');
-
 Vue.use(CKEditor);
 
 new Vue({

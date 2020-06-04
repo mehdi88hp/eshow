@@ -7,6 +7,15 @@ Route::group( [ 'middleware' => [ 'web' ], 'namespace' => '\Kaban\Components\Adm
                 'uses' => 'PostsController@index'
             ] )
                  ->where( 'link', '[^.]*' );
+
+            Route::post( '/posts/store', [
+                'as'   => 'posts.store',
+                'uses' => 'PostsController@store'
+            ] );
+            Route::post( '/posts/all', [
+                'as'   => 'posts.all',
+                'uses' => 'PostsController@all'
+            ] );
         } );
     } );
 } );

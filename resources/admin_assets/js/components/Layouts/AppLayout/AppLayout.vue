@@ -6,22 +6,31 @@
             app
         >
             <v-list dense>
-                <v-list-item link>
-                    <v-list-item-action>
-                        <v-icon>mdi-home</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        <v-list-item-title>Home</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-                <v-list-item link>
-                    <v-list-item-action>
-                        <v-icon>mdi-email</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        <v-list-item-title>Contact</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
+                <v-list-group
+                    prepend-icon="mdi-newspaper"
+                    value="1"
+                >
+                    <template v-slot:activator>
+                        <v-list-item-title>پست ها</v-list-item-title>
+                    </template>
+                    <v-list-item link :to="{name:'posts.index'}">
+                        <v-list-item-action>
+                            <v-icon>mdi-newspaper-variant</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title>لیست</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item link :to="{name:'posts.create'}">
+                        <v-list-item-action>
+                            <v-icon>mdi-new-box</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title>پست جدید</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list-group>
+
             </v-list>
         </v-navigation-drawer>
 

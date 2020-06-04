@@ -28,13 +28,15 @@
     24 => 'Laravel\\Tinker\\TinkerServiceProvider',
     25 => 'Facade\\Ignition\\IgnitionServiceProvider',
     26 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    27 => 'App\\Providers\\AppServiceProvider',
-    28 => 'App\\Providers\\AuthServiceProvider',
-    29 => 'App\\Providers\\EventServiceProvider',
-    30 => 'App\\Providers\\RouteServiceProvider',
-    31 => 'Kaban\\Core\\Providers\\KabanServiceProvider',
-    32 => 'Kaban\\Core\\Providers\\ComponentsServiceProvider',
-    33 => 'Kaban\\Core\\Providers\\MixBladeServiceProvider',
+    27 => 'Barryvdh\\Debugbar\\ServiceProvider',
+    28 => 'Laravel\\Ui\\UiServiceProvider',
+    29 => 'App\\Providers\\AppServiceProvider',
+    30 => 'App\\Providers\\AuthServiceProvider',
+    31 => 'App\\Providers\\EventServiceProvider',
+    32 => 'App\\Providers\\RouteServiceProvider',
+    33 => 'Kaban\\Core\\Providers\\KabanServiceProvider',
+    34 => 'Kaban\\Core\\Providers\\ComponentsServiceProvider',
+    35 => 'Kaban\\Core\\Providers\\MixBladeServiceProvider',
   ),
   'eager' => 
   array (
@@ -52,13 +54,14 @@
     11 => 'Fideloper\\Proxy\\TrustedProxyServiceProvider',
     12 => 'Facade\\Ignition\\IgnitionServiceProvider',
     13 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    14 => 'App\\Providers\\AppServiceProvider',
-    15 => 'App\\Providers\\AuthServiceProvider',
-    16 => 'App\\Providers\\EventServiceProvider',
-    17 => 'App\\Providers\\RouteServiceProvider',
-    18 => 'Kaban\\Core\\Providers\\KabanServiceProvider',
-    19 => 'Kaban\\Core\\Providers\\ComponentsServiceProvider',
-    20 => 'Kaban\\Core\\Providers\\MixBladeServiceProvider',
+    14 => 'Barryvdh\\Debugbar\\ServiceProvider',
+    15 => 'App\\Providers\\AppServiceProvider',
+    16 => 'App\\Providers\\AuthServiceProvider',
+    17 => 'App\\Providers\\EventServiceProvider',
+    18 => 'App\\Providers\\RouteServiceProvider',
+    19 => 'Kaban\\Core\\Providers\\KabanServiceProvider',
+    20 => 'Kaban\\Core\\Providers\\ComponentsServiceProvider',
+    21 => 'Kaban\\Core\\Providers\\MixBladeServiceProvider',
   ),
   'deferred' => 
   array (
@@ -167,6 +170,8 @@
     'validator' => 'Illuminate\\Validation\\ValidationServiceProvider',
     'validation.presence' => 'Illuminate\\Validation\\ValidationServiceProvider',
     'command.tinker' => 'Laravel\\Tinker\\TinkerServiceProvider',
+    'Laravel\\Ui\\AuthCommand' => 'Laravel\\Ui\\UiServiceProvider',
+    'Laravel\\Ui\\UiCommand' => 'Laravel\\Ui\\UiServiceProvider',
   ),
   'when' => 
   array (
@@ -207,6 +212,9 @@
     array (
     ),
     'Laravel\\Tinker\\TinkerServiceProvider' => 
+    array (
+    ),
+    'Laravel\\Ui\\UiServiceProvider' => 
     array (
     ),
   ),

@@ -1,6 +1,6 @@
 <template>
     <div id="my-editor">
-        <ckeditor :editor="editor" @ready="onReady" v-model="textValue"></ckeditor>
+        <ckeditor :editor="editor" @ready="onReady" :value="value" @input="textValueChanged"></ckeditor>
     </div>
 </template>
 
@@ -22,11 +22,14 @@
             };
         },
         props: {
-            textValue: {
+            value: {
                 default: '<p style="text-align:right"></p>'
             }
         },
         methods: {
+            textValueChanged(val) {
+                this.$emit('input', val)
+            },
             onReady(editor) {
                 // Insert the toolbar before the editable area.
                 editor.ui.getEditableElement().parentElement.insertBefore(
