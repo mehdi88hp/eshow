@@ -1,10 +1,10 @@
 const Layout = () => import('../components/Layouts/AppLayout/AppLayout');
-const Index = () => import('../components/Posts/PostsList');
-const Create = () => import('../components/Posts/PostsCreate');
-const Edit = () => import('../components/Posts/PostsEdit');
+const Index = () => import('../components/Categories/CategoriesList');
+const Create = () => import('../components/Categories/CategoriesCreate');
+const Edit = () => import('../components/Categories/CategoriesEdit');
 
 // import Layout from "../components/Layouts/AppLayout/AppLayout";
-// import Index from "../components/Posts/PostsList";
+// import Index from "../components/Categories/CategoriesList";
 
 const routes =
     [
@@ -16,25 +16,25 @@ const routes =
             },
             children: [
                 {
-                    path: 'admin/contents/posts/index',
+                    path: 'admin/contents/categories/index',
                     component: Index,
-                    name: 'posts.index',
+                    name: 'categories.index',
                     meta: {
                         title: 'لیست پست ها',
                     },
                 },
                 {
-                    path: 'admin/contents/posts/:id/edit',
+                    path: 'admin/contents/categories/:id/edit',
                     component: Edit,
-                    name: 'posts.edit',
+                    name: 'categories.edit',
                     meta: {
                         title: 'به روز رسانی پست',
                     },
                 },
                 {
-                    path: 'admin/contents/posts/create',
+                    path: 'admin/contents/categories/create',
                     component: Create,
-                    name: 'posts.create',
+                    name: 'categories.create',
                     meta: {
                         title: 'پست جدید',
                     },

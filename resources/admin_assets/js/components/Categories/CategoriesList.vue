@@ -163,7 +163,7 @@
     import {mapState} from "vuex";
 
     export default {
-        name: "PostsList",
+        name: "CategoriesList",
         data() {
             return {
                 itemsPerPageArray: [4, 8, 12],

@@ -1,11 +1,13 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Posts from './routes/posts';
+import Categories from './routes/categories';
 
 Vue.use(VueRouter);
 
 let routes = []
     .concat(Posts)
+    .concat(Categories)
 const router = new VueRouter({
     base: '/',
     mode: 'history',

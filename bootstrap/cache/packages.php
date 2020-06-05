@@ -56,4 +56,11 @@
       0 => 'Laravel\\Ui\\UiServiceProvider',
     ),
   ),
+  'kalnoy/nestedset' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Kalnoy\\Nestedset\\NestedSetServiceProvider',
+    ),
+  ),
 );

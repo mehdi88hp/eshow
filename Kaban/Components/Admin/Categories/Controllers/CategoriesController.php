@@ -1,17 +1,26 @@
 <?php
 
 
-namespace Kaban\Components\Admin\Posts\Controllers;
+namespace Kaban\Components\Admin\Categories\Controllers;
 
 
 use Illuminate\Http\Request;
-use Kaban\Components\Admin\Posts\Resources\GetAllPostsResource;
+use Kaban\Components\Admin\Category\Resources\SearchResource;
 use Kaban\General\Enums\EPostStatus;
+use Kaban\Models\Category;
 use Kaban\Models\Post;
 
-class PostsController {
-    public function index( Request $request ) {
-        return view( 'AdminPosts::index' );
+class CategoriesController {
+    public function index() {
+        return view( 'AdminCategories::index' );
+    }
+
+    public function search( Request $request ) {
+
+
+        $posts = Category::where( 'title', 'like', '%' . $request->val . '%' )->paginate( 10 );
+
+        return SearchResource::collection( $posts );
     }
 
     public function edit( $id ) {
@@ -31,7 +40,7 @@ class PostsController {
 
     public function store( Request $request ) {
         $uid    = auth()->id();
-        $item   = Post::create( [
+        $item   = Category::create( [
             'content'    => $request->content,
             'title'      => $request->title,
             'excerpt'    => $request->excerpt,

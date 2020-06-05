@@ -12,6 +12,10 @@ Route::group( [ 'middleware' => [ 'web' ], 'namespace' => '\Kaban\Components\Adm
                 'as'   => 'posts.store',
                 'uses' => 'PostsController@store'
             ] );
+            Route::post( '/posts/{id}/edit', [
+                'as'   => 'posts.edit',
+                'uses' => 'PostsController@edit'
+            ] );
             Route::post( '/posts/all', [
                 'as'   => 'posts.all',
                 'uses' => 'PostsController@all'

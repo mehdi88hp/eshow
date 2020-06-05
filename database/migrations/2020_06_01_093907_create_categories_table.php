@@ -13,7 +13,7 @@ class CreateCategoriesTable extends Migration {
     public function up() {
         Schema::create( 'categories', function ( Blueprint $table ) {
             $table->bigIncrements( 'id' );
-            $table->integer( 'parent_id' )->nullable()->index();
+//            $table->integer( 'parent_id' )->nullable()->index();
             $table->integer( 'lft' )->nullable()->index();
             $table->integer( 'rgt' )->nullable()->index();
             $table->integer( 'depth' )->nullable();
@@ -36,6 +36,7 @@ class CreateCategoriesTable extends Migration {
             $table->unsignedBigInteger( 'updated_by' );
             $table->timestamps();
             $table->softDeletes();
+            $table->nestedSet();
         } );
 
         Schema::table( 'categories', function ( Blueprint $table ) {

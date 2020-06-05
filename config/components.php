@@ -5,10 +5,11 @@ return [
         'General' => [
 
         ],
-        'Admin' => [
+        'Admin'   => [
             'Posts',
+            'Categories',
         ],
-        'Site' => [
+        'Site'    => [
 //            'Homepage',
         ],
     ]

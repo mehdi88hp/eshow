@@ -30,7 +30,30 @@
                         </v-list-item-content>
                     </v-list-item>
                 </v-list-group>
-
+                <v-list-group
+                    prepend-icon="mdi-order-bool-ascending"
+                    value="2"
+                >
+                    <template v-slot:activator>
+                        <v-list-item-title>دسته بندی ها</v-list-item-title>
+                    </template>
+                    <v-list-item link :to="{name:'categories.index'}">
+                        <v-list-item-action>
+                            <v-icon>mdi-order-alphabetical-ascending</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title>لیست</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item link :to="{name:'categories.create'}">
+                        <v-list-item-action>
+                            <v-icon>mdi-new-box</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title>دسته بندی جدید</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list-group>
             </v-list>
         </v-navigation-drawer>
 

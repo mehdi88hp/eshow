@@ -38,11 +38,11 @@ class Post extends Model {
     public function scopeValid( $q ) {
         $q->where( 'status', EPostStatus::approved );
     }
-//
-//    public function category() {
-//        return $this->belongsTo( Category::class );
-//    }
-//
+
+    public function category() {
+        return $this->belongsTo( Category::class );
+    }
+
 
 
     public function tags() {
