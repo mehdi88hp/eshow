@@ -5,7 +5,9 @@ namespace Kaban\Components\Admin\Categories\Controllers;
 
 
 use Illuminate\Http\Request;
-use Kaban\Components\Admin\Category\Resources\SearchResource;
+use Kaban\Components\Admin\Categories\Resources\GetAllCategoriesResource;
+use Kaban\Components\Admin\Categories\Resources\GetCategoryEditItemResource;
+use Kaban\Components\Admin\Categories\Resources\SearchResource;
 use Kaban\General\Enums\EPostStatus;
 use Kaban\Models\Category;
 use Kaban\Models\Post;
@@ -24,35 +26,61 @@ class CategoriesController {
     }
 
     public function edit( $id ) {
-        $post = Post::with( 'tags' )->findOrFail( $id );
-        //next create categoty component then back to here
-        dd( $post );
+        $category = Category::findOrFail( $id );
 
-        return view( 'AdminPosts::index' );
+        return new GetCategoryEditItemResource( $category );
     }
 
-    public function all() {
-        $posts = Post::paginate( 2 );
+    public function all( Request $request ) {
+        $sortType = 'DESC';
+        $sortBy   = 'id';
 
-        return GetAllPostsResource::collection( $posts );
+        if ( ! empty( $request->sortBy[0] ) && in_array( $request->sortBy[0], [ 'id', 'title' ] ) ) {
+            $sortBy = $request->sortBy[0];
+        }
+        if ( empty( $request->sortDesc[0] ) ) {
+            $sortType = 'ASC';
+        }
+
+        $posts = Category::when( $request->search, function ( $q ) use ( $request ) {
+            $q->where( 'title', 'like', "%$request->search%" );
+        } )->orderBy( $sortBy, $sortType )->paginate( $request->itemsPerPage, [ '*' ], 'ascasc', $request->page );
+
+        return GetAllCategoriesResource::collection( $posts );
 //        return new GetAllPostsResource( $posts );
     }
 
     public function store( Request $request ) {
-        $uid    = auth()->id();
-        $item   = Category::create( [
-            'content'    => $request->content,
+        $uid  = auth()->id();
+        $item = Category::create( [
             'title'      => $request->title,
-            'excerpt'    => $request->excerpt,
+            'parent_id'  => $request->parent['value'],
             'author_id'  => $uid,
             'created_by' => $uid,
             'updated_by' => $uid,
             'status'     => EPostStatus::approved,
-            'slug'       => slugify( 'title' )
+            'slug'       => slugify( $request->title )
         ] );
-        $tagIds = $item->syncTags( $request->input( 'tag', [] ) );
 
-        $item->tag_ids = $tagIds;
-        $item->save();
+        return 'ok';
+    }
+
+    public function destroy( $id ) {
+        Post::where( 'category_id', $id )->update( [ 'category_id' => null ] );
+        $x = Category::query()->findOrFail( $id );
+
+        return 'done';
+    }
+
+    public function update( Request $request ) {
+        $uid      = auth()->id();
+        $category = Category::find( $request->id );
+//        dd( $request->all() );
+        $category->update( [
+            'title'     => $request->title,
+            'parent_id' => $request->parent,
+        ] );
+
+        return 'done';
     }
 }

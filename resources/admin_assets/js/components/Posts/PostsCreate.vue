@@ -43,9 +43,10 @@
                                 v-model="form.categories"
                                 :items="catItems"
                                 :rules="categoryRules"
+                                :loading="isLoading"
+                                :search-input.sync="searchCat"
                                 chips
                                 deletable-chips
-                                multiple
                                 label='دسته بندی'></v-autocomplete>
                         </v-col>
                     </v-row>
@@ -76,6 +77,8 @@
         components: {MyEditor},
         data() {
             return {
+                isLoading: false,
+                searchCat: null,
                 valid: false,
                 form: {
                     content: '',
@@ -87,16 +90,14 @@
                 content: '',
                 categories: '',
                 tag: [],
-                catItems: ['cat1', 'cat2'],
+                catItems: [''],
                 categories: [],
                 title: '',
                 excerpt: '',
-                tagItems: [
-                    'this.tags',
-                ],
+                tagItems: [],
                 titleRules: [
                     v => !!v || 'عنوان الزامی است',
-                    v => v.length >= 6 || 'حداقل 6 کاراکتر الزامی است',
+                    v => v.length >= 3 || 'حداقل 6 کاراکتر الزامی است',
                 ],
                 excerptRule: [
                     v => !!v || 'عنوان الزامی است',
@@ -108,7 +109,7 @@
                     },
                 ],
                 categoryRules: [
-                    v => !!v.length || 'انتخاب دسته بندی الزامی است',
+                    v => !!this.catItems.length || 'انتخاب دسته بندی الزامی است',
                 ]
             }
         },
@@ -122,9 +123,32 @@
                 console.log(23424, this.tags, this.content, 888)
             },
             submit() {
-                axios.post('/admin/contents/posts/store', this.form)
+                this.formLoading = true;
+                axios.post('/admin/contents/posts/store', this.form).then(r => {
+                    this.$router.push({name: 'posts.index'});
+                })
             }
         },
+        watch: {
+            searchCat(val) {
+                if (this.isLoading) return
+                this.isLoading = true
+                // Lazily load input items
+                axios.post('/admin/contents/categories/search', {val})
+                    .then(res => {
+                        this.count = res.data.length
+                        this.catItems = res.data.data
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                    .finally(() => (this.isLoading = false))
+            },
+            mounted() {
+
+            }
+        },
+
         mounted() {
 
         }

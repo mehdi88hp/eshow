@@ -2,12 +2,14 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Posts from './routes/posts';
 import Categories from './routes/categories';
+import Media from './routes/media';
 
 Vue.use(VueRouter);
 
 let routes = []
     .concat(Posts)
     .concat(Categories)
+    .concat(Media)
 const router = new VueRouter({
     base: '/',
     mode: 'history',
@@ -18,3 +20,4 @@ const router = new VueRouter({
 });
 
 export default router;
+

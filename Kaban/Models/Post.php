@@ -15,6 +15,7 @@ use Kaban\General\Interfaces\IValuable;
 use Kaban\General\Services\Content;
 
 class Post extends Model {
+    protected $softDelete = true;
 //    BaseModel implements ICommentable, IHittable {
 //    use Hittable, Commentable;
 //    protected $fillable = [ 'title', 'excerpt', 'contact' ];
@@ -44,25 +45,24 @@ class Post extends Model {
     }
 
 
-
     public function tags() {
         return $this->morphToMany( Tag::class, 'taggable' );
     }
 
     public function syncTags( $tags ) {
-        $tagIdsToAttach = [];
+        $existed_tags    = Tag::whereIn( 'name', $tags )->where( 'type', ETagType::post )->get();
+        $tagIdsToAttach  = $existed_tags->pluck( 'id' )->toArray();
+        $existedTagNames = $existed_tags->pluck( 'name' )->toArray();
+
         foreach ( $tags as $tag ) {
-            $id = $tag;
-            if ( ! is_numeric( $tag ) ) {
-                //new tag
-                $tagModel = Tag::create( [
+            if ( ! in_array( $tag, $existedTagNames ) ) {
+                $tagModel         = Tag::where( 'name', '!=', $tag )->create( [
                     'name' => $tag,
                     'type' => ETagType::post
                 ] );
-                $id       = $tagModel->id;
+                $tagIdsToAttach[] = $tagModel->id;
             }
 
-            $tagIdsToAttach[] = $id;
         }
 
         $this->tags()->sync( $tagIdsToAttach );

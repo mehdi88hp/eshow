@@ -14,18 +14,13 @@ class GetAllPostsResource extends JsonResource {
      * @return array
      */
     public function toArray( $request ) {
-//        return [
-//            'data' => $this->collection,
-//            'links' => [
-//                'self' => 'link-value',
-//            ],
-//        ];
-        return [
-            'title'   => $this->title,
-//            'content' => $this->content,
-            'excerpt' => $this->excerpt,
-            'id'      => $this->id,
 
+        return [
+            'title'    => $this->title,
+            'category' => $this->category->title,
+//            'content' => $this->content,
+            'excerpt'  => $this->excerpt,
+            'id'       => $this->id,
         ];
 
         return parent::toArray( $request );

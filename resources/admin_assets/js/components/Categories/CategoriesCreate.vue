@@ -29,7 +29,9 @@
                                 label='دسته بندی مادر'></v-autocomplete>
                         </v-col>
                     </v-row>
-                    <v-btn color="primary" ripple block class="mt-5" :disabled="!valid" @click="submit" :loading="formLoading">ذخیره</v-btn>
+                    <v-btn color="primary" ripple block class="mt-5" :disabled="!valid" @click="submit"
+                           :loading="formLoading">ذخیره
+                    </v-btn>
 
                 </v-card>
             </v-col>
@@ -59,14 +61,15 @@
                 },
                 categories: '',
                 search: null,
-                catItems: [],
+                catItems: [
+                    {text: 'همه', value: 1}
+                ],
                 titleRules: [
                     v => !!v || 'عنوان الزامی است',
                 ],
                 categoryRules: [
                     v => {
-                        console.log(v);
-                        return !!v.text || 'انتخاب دسته بندی الزامی است'
+                        return !!this.form.parent || 'انتخاب دسته بندی الزامی است'
                     },
                 ]
             }
@@ -78,9 +81,9 @@
         },
         methods: {
             submit() {
-                this.formLoading=true;
-                axios.post('/admin/contents/categories/store', this.form).then(r=>{
-
+                this.formLoading = true;
+                axios.post('/admin/contents/categories/store', this.form).then(r => {
+                    this.$router.push({name: 'categories.index'});
                 })
             }
         },

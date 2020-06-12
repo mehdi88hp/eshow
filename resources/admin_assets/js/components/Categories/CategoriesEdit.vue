@@ -17,46 +17,22 @@
                         reverse
                         :rules="titleRules"
                     ></v-text-field>
-                    <v-textarea
-                        :rules="excerptRule"
-                        counter
-                        v-model="form.excerpt"
-                        label="خلاصه"
-                        reverse
-                        auto-grow
-                        rows="1"
-                    ></v-textarea>
                     <v-row>
-                        <v-col md="6" sm="12">
-                            <v-combobox
-                                v-model="form.tag"
-                                :items="tagItems"
-                                :rules="tagRules"
-                                @change="checkTag"
-                                chips
-                                deletable-chips
-                                multiple
-                                label='tag'></v-combobox>
-                        </v-col>
-                        <v-col md="6" sm="12">
+                        <v-col md="12" sm="12">
                             <v-autocomplete
-                                v-model="form.categories"
+                                v-model="form.parent"
                                 :items="catItems"
                                 :rules="categoryRules"
+                                :loading="isLoading"
+                                :search-input.sync="search"
                                 chips
                                 deletable-chips
-                                multiple
-                                label='دسته بندی'></v-autocomplete>
+                                label='دسته بندی مادر'></v-autocomplete>
                         </v-col>
                     </v-row>
-                    <v-divider></v-divider>
-                    <v-col sm="12" class="ma-5">
-                        <v-label class="ma-5"><h3>متن</h3></v-label>
-                    </v-col>
-                    <my-editor v-model="form.content"></my-editor>
-                    <!--                    <label v-if="contentError">{{contentError}}</label>-->
-
-                    <v-btn color="primary" ripple block class="mt-5" :disabled="!valid" @click="submit">ذخیره</v-btn>
+                    <v-btn color="primary" ripple block class="mt-5" :disabled="!valid" @click="submit"
+                           :loading="formLoading">ذخیره
+                    </v-btn>
 
                 </v-card>
             </v-col>
@@ -65,50 +41,30 @@
 
 </template>
 
-
 <script>
-
-
     import MyEditor from "../Layouts/my-editor";
 
     export default {
-        name: "CategoriesEdit",
+        name: "CategoriesCreate",
         components: {MyEditor},
         data() {
             return {
                 valid: false,
+                isLoading: false,
+                formLoading: false,
                 form: {
-                    content: '',
-                    categories: [],
-                    tag: [],
                     title: '',
-                    excerpt: '',
+                    parent: null,
                 },
-                content: '',
-                categories: '',
-                tag: [],
-                catItems: ['cat1', 'cat2'],
-                categories: [],
-                title: '',
-                excerpt: '',
-                tagItems: [
-                    'this.tags',
-                ],
+                search: null,
+                catItems: [],
                 titleRules: [
                     v => !!v || 'عنوان الزامی است',
-                    v => v.length >= 6 || 'حداقل 6 کاراکتر الزامی است',
-                ],
-                excerptRule: [
-                    v => !!v || 'عنوان الزامی است',
-                    v => v.length >= 30 || 'حداقل 30 کاراکتر الزامی است',
-                ],
-                tagRules: [
-                    v => {
-                        return !!v.length || 'انتخاب تگ الزامی است'
-                    },
                 ],
                 categoryRules: [
-                    v => !!v.length || 'انتخاب دسته بندی الزامی است',
+                    v => {
+                        return !!this.form.parent || 'انتخاب دسته بندی الزامی است'
+                    },
                 ]
             }
         },
@@ -118,18 +74,38 @@
             }
         },
         methods: {
-            checkTag() {
-                console.log(23424, this.tags, this.content, 888)
-            },
             submit() {
-                axios.post('/admin/contents/posts/store', this.form)
+                this.formLoading = true;
+                axios.post('/admin/contents/categories/' + this.$route.params.id + '/update', this.form).then(r => {
+                    this.$router.push({name: 'categories.index'});
+                })
             }
         },
-        mounted() {
-            axios.post('/admin/contents/posts/' + this.$route.params.id + '/edit').then(r => {
+        watch: {
+            search(val) {
+                // Items have already been requested
+                if (this.isLoading) return
 
-            }).catch((err, data) => {
-                console.error('error happaned', err, data)
+                this.isLoading = true
+
+                // Lazily load input items
+                console.log(666, val)
+                axios.post('/admin/contents/categories/search', {val})
+                    .then(res => {
+                        this.count = res.data.length
+                        this.catItems = res.data.data
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                    .finally(() => (this.isLoading = false))
+            },
+
+        },
+        mounted() {
+            axios.post('/admin/contents/categories/' + this.$route.params.id + '/edit').then(r => {
+                this.form = r.data.data;
+                this.catItems = r.data.data.categoryItems;
             })
         }
     }

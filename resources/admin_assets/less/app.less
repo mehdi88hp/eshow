@@ -1,6 +1,7 @@
 @import "~@mdi/font/css/materialdesignicons.min.css";
 @import "fonts";
 @import "~vuetify/dist/vuetify.min.css";
+@import "./media.create";
 
 #my-editor {
     .ck.ck-content {
@@ -32,4 +33,11 @@ div[role=combobox] label.v-label {
 .v-messages .v-messages__wrapper {
     direction: rtl;
     text-align: right;
+}
+
+.v-data-table .v-data-footer {
+    direction: ltr !important;
+}
+.v-data-footer__pagination{
+    direction:rtl;
 }

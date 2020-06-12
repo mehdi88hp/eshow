@@ -1,5 +1,8 @@
 <?php
-Route::group( [ 'middleware' => [ 'web' ], 'namespace' => '\Kaban\Components\Admin\Posts\Controllers' ], function () {
+Route::group( [
+    'middleware' => [ 'web', 'panel' ],
+    'namespace'  => '\Kaban\Components\Admin\Posts\Controllers'
+], function () {
     Route::group( [ 'prefix' => 'admin' ], function () {
         Route::group( [ 'prefix' => 'contents', 'as' => 'admin.contents.' ], function () {
             Route::get( '/{link?}', [
@@ -15,6 +18,14 @@ Route::group( [ 'middleware' => [ 'web' ], 'namespace' => '\Kaban\Components\Adm
             Route::post( '/posts/{id}/edit', [
                 'as'   => 'posts.edit',
                 'uses' => 'PostsController@edit'
+            ] );
+            Route::post( '/posts/{id}/update', [
+                'as'   => 'posts.update',
+                'uses' => 'PostsController@update'
+            ] );
+            Route::post( '/posts/{id}/destroy', [
+                'as'   => 'posts.delete',
+                'uses' => 'PostsController@destroy'
             ] );
             Route::post( '/posts/all', [
                 'as'   => 'posts.all',

@@ -37,7 +37,8 @@ class CreatePostsTable extends Migration {
         Schema::table( 'posts', function ( Blueprint $table ) {
             $table->foreign( 'category_id' )
                   ->references( 'id' )
-                  ->on( 'categories' );
+                  ->on( 'categories' )
+                  ->onDelete( 'SET NULL' );
             $table->foreign( 'author_id' )
                   ->references( 'id' )
                   ->on( 'users' );

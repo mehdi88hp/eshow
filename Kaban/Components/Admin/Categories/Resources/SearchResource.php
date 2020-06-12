@@ -1,6 +1,6 @@
 <?php
 
-namespace Kaban\Components\Admin\Category\Resources;
+namespace Kaban\Components\Admin\Categories\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 

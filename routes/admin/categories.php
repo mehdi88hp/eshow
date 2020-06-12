@@ -1,5 +1,8 @@
 <?php
-Route::group( [ 'middleware' => [ 'web' ], 'namespace' => '\Kaban\Components\Admin\Categories\Controllers' ], function () {
+Route::group( [
+    'middleware' => [ 'web', 'panel' ],
+    'namespace'  => '\Kaban\Components\Admin\Categories\Controllers'
+], function () {
     Route::group( [ 'prefix' => 'admin' ], function () {
         Route::group( [ 'prefix' => 'contents', 'as' => 'admin.contents.' ], function () {
             Route::get( '/{link?}', [
@@ -19,6 +22,14 @@ Route::group( [ 'middleware' => [ 'web' ], 'namespace' => '\Kaban\Components\Adm
             Route::post( '/categories/{id}/edit', [
                 'as'   => 'categories.edit',
                 'uses' => 'CategoriesController@edit'
+            ] );
+            Route::post( '/categories/{id}/update', [
+                'as'   => 'categories.update',
+                'uses' => 'CategoriesController@update'
+            ] );
+            Route::post( '/categories/{id}/destroy', [
+                'as'   => 'categories.delete',
+                'uses' => 'CategoriesController@destroy'
             ] );
             Route::post( '/categories/all', [
                 'as'   => 'categories.all',
