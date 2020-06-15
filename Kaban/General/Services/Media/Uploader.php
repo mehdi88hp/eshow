@@ -3,6 +3,8 @@
 namespace Kaban\General\Services\Media;
 
 
+use Illuminate\Filesystem\Filesystem;
+
 class Uploader
 {
     protected $path;
@@ -17,7 +19,7 @@ class Uploader
 
     public function __construct($configKey = '')
     {
-        $this->disk = config('lastsecond.DEFAULT_UPLOADER_DISK', 'sftp');
+        $this->disk = config('eshow.DEFAULT_UPLOADER_DISK', 'sftp');
 
         $this->driver = app('filesystem')->disk($this->disk);
 

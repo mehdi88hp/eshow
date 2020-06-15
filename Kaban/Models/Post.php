@@ -15,6 +15,8 @@ use Kaban\General\Interfaces\IValuable;
 use Kaban\General\Services\Content;
 
 class Post extends Model {
+    use HasMedia;
+
     protected $softDelete = true;
 //    BaseModel implements ICommentable, IHittable {
 //    use Hittable, Commentable;

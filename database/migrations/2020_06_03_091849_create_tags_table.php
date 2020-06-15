@@ -11,18 +11,18 @@ class CreateTagsTable extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create( 'tags', function ( Blueprint $table ) {
-            $table->bigIncrements( 'id' );
-            $table->string( 'name' );
-            $table->integer( 'type' );
-
-            $table->timestamps();
-            $table->softDeletes();
-        } );
-        Schema::create( 'taggables', function ( Blueprint $table ) {
-            $table->unsignedInteger( 'tag_id' );
-            $table->morphs( 'taggable' );
-        } );
+//        Schema::create( 'tags', function ( Blueprint $table ) {
+//            $table->bigIncrements( 'id' );
+//            $table->string( 'name' );
+//            $table->integer( 'type' );
+//
+//            $table->timestamps();
+//            $table->softDeletes();
+//        } );
+//        Schema::create( 'taggables', function ( Blueprint $table ) {
+//            $table->unsignedInteger( 'tag_id' );
+//            $table->morphs( 'taggable' );
+//        } );
     }
 
     /**
@@ -32,8 +32,8 @@ class CreateTagsTable extends Migration {
      */
     public function down() {
         DB::statement( 'SET FOREIGN_KEY_CHECKS = 0' );
-        Schema::drop( 'tags' );
-        Schema::drop( 'taggables' );
+//        Schema::drop( 'tags' );
+//        Schema::drop( 'taggables' );
         DB::statement( 'SET FOREIGN_KEY_CHECKS = 1' );
 
     }

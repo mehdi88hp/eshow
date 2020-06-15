@@ -3,6 +3,7 @@
 namespace Kaban\General\Services\Media;
 
 
+use Illuminate\Support\Arr;
 use Intervention\Image\Facades\Image;
 
 class ImageProcessor
@@ -66,14 +67,14 @@ class ImageProcessor
 
 
         // Add Image Watermark
-        if ($watermarkImage = $this->config('watermark_image', false)) {
-            $image = $image->insert($watermarkImage, $this->config('watermark_position'), $this->config('watermark_offset_x'), $this->config('watermark_offset_y'));
-        }
-
-        // Add Image Watermark
-        if ($watermarkText = $this->config('watermark_text', false)) {
-            $image = $image->text($watermarkText, $this->config('watermark_offset_x'), $this->config('watermark_offset_y'));
-        }
+//        if ($watermarkImage = $this->config('watermark_image', false)) {
+//            $image = $image->insert($watermarkImage, $this->config('watermark_position'), $this->config('watermark_offset_x'), $this->config('watermark_offset_y'));
+//        }
+//
+//        // Add Image Watermark
+//        if ($watermarkText = $this->config('watermark_text', false)) {
+//            $image = $image->text($watermarkText, $this->config('watermark_offset_x'), $this->config('watermark_offset_y'));
+//        }
 
         return $image->encode(null, $this->config('quality'));
     }
@@ -112,7 +113,7 @@ class ImageProcessor
 
     public function config($key, $default = '')
     {
-        return array_get($this->config, $key, $default);
+        return Arr::get($this->config, $key, $default);
     }
 
     private function loadConfig($configKey)
@@ -123,7 +124,7 @@ class ImageProcessor
 
         if (\Auth::check()) {
             if ($customConfig = config('media.' . $configKey)) {
-                $customConfig = array_merge(array_get($customConfig, "default", []), array_get($customConfig, \Auth::user()->panel_name, []));
+                $customConfig = array_merge(Arr::get($customConfig, "default", []), Arr::get($customConfig, \Auth::user()->panel_name, []));
             } else {
                 $customConfig = config('media.' . \Auth::user()->panel_name, []);
             }

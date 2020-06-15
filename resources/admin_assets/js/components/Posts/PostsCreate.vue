@@ -88,7 +88,6 @@
                     excerpt: '',
                 },
                 content: '',
-                categories: '',
                 tag: [],
                 catItems: [''],
                 categories: [],

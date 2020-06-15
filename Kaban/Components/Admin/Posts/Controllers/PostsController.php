@@ -7,6 +7,7 @@ namespace Kaban\Components\Admin\Posts\Controllers;
 use Illuminate\Http\Request;
 use Kaban\Components\Admin\Posts\Resources\GetAllPostsResource;
 use Kaban\Components\Admin\Posts\Resources\GetPostEditItemResource;
+use Kaban\Components\Admin\Posts\Resources\GetSearchedPostsResource;
 use Kaban\General\Enums\EPostStatus;
 use Kaban\Models\Post;
 
@@ -19,6 +20,12 @@ class PostsController {
         $post = Post::with( 'tags' )->findOrFail( $id );
 
         return new GetPostEditItemResource( $post );
+    }
+
+    public function search() {
+        $post = Post::with( 'media' )->paginate( 10 );
+
+        return GetSearchedPostsResource::collection( $post );
     }
 
     public function all( Request $request ) {

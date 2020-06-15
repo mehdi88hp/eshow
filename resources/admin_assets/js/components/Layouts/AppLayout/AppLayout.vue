@@ -54,6 +54,14 @@
                         </v-list-item-content>
                     </v-list-item>
                 </v-list-group>
+                <v-list-item link :to="{name:'media.create'}">
+                    <v-list-item-action>
+                        <v-icon>mdi-order-alphabetical-ascending</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title>گالری</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
             </v-list>
         </v-navigation-drawer>
 

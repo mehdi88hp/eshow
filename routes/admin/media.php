@@ -5,14 +5,17 @@ Route::group( [
 ], function () {
     Route::group( [ 'prefix' => 'admin' ], function () {
         Route::group( [ 'prefix' => 'contents', 'as' => 'admin.contents.' ], function () {
-            Route::get( '/{link?}', [
-                'as'   => 'categories.index',
-                'uses' => 'CategoriesController@index'
-            ] )->where( 'link', '[^.]*' );
-
             Route::post( '/media/upload', [
                 'as'   => 'media.upload',
                 'uses' => 'MediaController@upload'
+            ] );
+            Route::post( '/media/get-all', [
+                'as'   => 'media.getAll',
+                'uses' => 'MediaController@getAll'
+            ] );
+            Route::post( '/media/all', [
+                'as'   => 'media.all',
+                'uses' => 'MediaController@all'
             ] );
         } );
     } );

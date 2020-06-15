@@ -71,7 +71,7 @@ class MediaFile
 
     public function getPath()
     {
-        return $this->path ?: config('lastsecond.UPLOAD_BASE_PATH', 'lastsecond') . '/' . date('Y/m/d');
+        return $this->path ?: config('eshow.UPLOAD_BASE_PATH', 'eshow') . '/' . date('Y/m/d');
     }
 
     public function setThumbnailPath($thumbnailPath)
@@ -83,7 +83,7 @@ class MediaFile
 
     public function getThumbnailPath()
     {
-        return $this->thumbnailPath ?: config('lastsecond.UPLOAD_THUMBNAIL_PATH', 'lastsecond/thumbnails');
+        return $this->thumbnailPath ?: config('eshow.UPLOAD_THUMBNAIL_PATH', 'eshow/thumbnails');
     }
 
     public function setName($name)

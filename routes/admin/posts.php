@@ -15,6 +15,10 @@ Route::group( [
                 'as'   => 'posts.store',
                 'uses' => 'PostsController@store'
             ] );
+            Route::post( '/posts/search', [
+                'as'   => 'posts.search',
+                'uses' => 'PostsController@search'
+            ] );
             Route::post( '/posts/{id}/edit', [
                 'as'   => 'posts.edit',
                 'uses' => 'PostsController@edit'

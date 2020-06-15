@@ -18,11 +18,16 @@ class CreateMediaTable extends Migration {
             $table->string( 'title' )->nullable();
             $table->string( 'path' )->defaut( '' );
             $table->string( 'disk' );
+            $table->unsignedBigInteger( 'old_id' )->nullable();
+            $table->integer( 'ordering' )->nullable();
             $table->string( 'url', 1022 )->nullable();
             $table->string( 'mime_type' )->nullable();
             $table->unsignedBigInteger( 'user_id' )->nullable();
-
-            $table->integer( 'state' );
+            $table->string( 'description' )->nullalbe();
+            $table->timestamp( 'approved_at' )->nullable();
+            $table->string( 'thumbnail_full_path', 511 )->nullable();
+            $table->string( 'thumbnail_url' )->nullable();
+            $table->tinyInteger( 'status' );
             $table->bigInteger( 'created_by' )->unsigned()->nullable();
             $table->bigInteger( 'updated_by' )->unsigned()->nullable();
             $table->timestamps();
@@ -41,6 +46,8 @@ class CreateMediaTable extends Migration {
             $table->foreign( 'user_id' )
                   ->references( 'id' )
                   ->on( 'users' );
+            $table->foreign( 'old_id' )->references( 'id' )->on( 'media' )->onDelete( 'SET NULL' );
+
         } );
     }
 
