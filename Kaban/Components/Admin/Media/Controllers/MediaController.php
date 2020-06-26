@@ -6,13 +6,11 @@ namespace Kaban\Components\Admin\Media\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Kaban\Components\Admin\Media\Resources\GetAllMediaResource;
 use Kaban\Components\Site\Reviews\Requests\ReviewMediaUploadRequest;
 use Kaban\General\Services\Media\MediaService;
 use Kaban\Models\Media;
-use Kaban\Models\Post;
 
 class MediaController {
 
@@ -34,14 +32,18 @@ class MediaController {
         return $this->all();
     }
 
-    public function all() {
-        $media = Media::paginate( 50 );
+    public function all( $postType, $postID ) {
+        $model = 'Kaban\\Models\\' . $postType;
+        $media = $model::find( $postID )->media()
+                       ->paginate( 50 );
 
         return GetAllMediaResource::collection( $media );
     }
 
     public function upload( Request $request ) {
-        $post = Post::first();
+        $model = 'Kaban\\Models\\' . $request->postType;
+        $post  = $model::find( $request->postID );
+
         try {
             $auth = Auth::user();
 
@@ -49,16 +51,12 @@ class MediaController {
 //
 //            $reviewable = $review->reviewable;
 
-            $mediaFile = MediaService::fromUploadedFile( $request->file( 'item' ) );
+            $mediaFile = MediaService::fromUploadedFile( $request->file( 'file' ) );
 
             $this->mediaService->getUploader()->setConfigKey( 'review' );
             if ( $this->mediaService->upload( $mediaFile ) ) {
-//                $oldMedia = ( $oldId = $request->input( 'old_id' ) )
-//                    ? $review->media()->find( $oldId )
-//                    : null;
                 $oldMedia = null;
-//                $data     = $request->only( [ 'description' ] );
-                $data = [
+                $data     = [
                     'approved_at' => Carbon::now(),
                     'name'        => 'mehdi'
                 ];
@@ -70,13 +68,11 @@ class MediaController {
                 }
 
                 $pivotData = [
-                    'category_id'     => $post->category_id,
-                    'reviewable_id'   => $post->id,
-                    'reviewable_type' => Post::class
+                    'category_id' => $post->category_id,
                 ];
                 $media     = $this->mediaService->createMedia( $mediaFile, $data );
 
-                $this->mediaService->attachMedia( $media, $post, 'posts', [], Arr::only( $pivotData, [ 'category_id' ] ) );
+                $this->mediaService->attachMedia( $media, $post, 'posts', [] );
 
 //                $this->mediaService->attachMedia( $media, $review, null, [], $pivotData );
 
@@ -90,7 +86,7 @@ class MediaController {
 
             return response()->json( [
                 'success' => true,
-                'all'     => $this->all(),
+                'all'     => $this->all( $request->postType, $request->postID ),
                 'media'   => [
                     'id'          => $media->id,
                     'url'         => $media->url,
@@ -109,5 +105,18 @@ class MediaController {
                 'message' => $e->getMessage(),
             ], 400 );
         }
+    }
+
+    public function destroy( Request $request ) {
+        $oldMedia = Media::findOrFail( $request->id );
+        $this->mediaService->removeMedia( $oldMedia );
+
+        return response()->json( [
+            'success' => true,
+            'all'     => $this->all( $request->postType, $request->postID ),
+            'message' => trans( 'site.media.media.media_removed_successfully' ),
+        ] );
+
+        return 'done';
     }
 }

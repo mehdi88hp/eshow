@@ -1,15 +1,16 @@
 <template>
-    <v-form
-        ref="form"
-        v-model="valid"
-        @submit="submit"
-    >
-        <v-row justify="center">
-            <v-col
-                cols="12"
-                md="8"
-                sm="10"
+    <v-row>
+        <v-col
+            cols="12"
+            md="8"
+            sm="10"
+        >
+            <v-form
+                ref="form"
+                v-model="valid"
+                @submit="submit"
             >
+
                 <v-card class="pa-5">
                     <v-text-field
                         label="عنوان"
@@ -32,6 +33,8 @@
                                 v-model="form.tags"
                                 :items="tagItems"
                                 :rules="tagRules"
+                                :loading="tagIsLoading"
+                                :search-input.sync="searchTags"
                                 chips
                                 deletable-chips
                                 multiple
@@ -64,16 +67,68 @@
                     </v-col>
                     <my-editor v-model="form.content"></my-editor>
                     <!--<label v-if="contentError">{{contentError}}</label>-->
+                    <v-row>
+                        <v-col md="6" sm="12">
+                            <v-file-input
+                                v-model="form.poster"
+                                ref="poster"
+                                placeholder="انتخاب پوستر"
+                                label=" پوستر"
+                                prepend-icon="mdi-paperclip"
+                                :rules="posterRule"
+                            >
+                                <template v-slot:selection="{ text }">
+                                    <v-chip
+                                        small
+                                        label
+                                        color="primary"
+                                    >
+                                        {{ text }}
+                                    </v-chip>
+                                </template>
+                            </v-file-input>
+
+                        </v-col>
+                        <v-col md="6" sm="12">
+                            <v-img contain height="150px" v-if="posterImg" :src="posterImg"></v-img>
+                        </v-col>
+
+                    </v-row>
+                    <v-row>
+                        <v-col md="6" sm="12">
+                            <v-file-input
+                                v-model="form.backdrop"
+                                placeholder="انتخاب تصویر عمودی"
+                                label="تصویر عمودی"
+                                prepend-icon="mdi-paperclip"
+                                :rules="backdropRule"
+                            >
+                                <template v-slot:selection="{ text }">
+                                    <v-chip
+                                        small
+                                        label
+                                        color="primary"
+                                    >
+                                        {{ text }}
+                                    </v-chip>
+                                </template>
+                            </v-file-input>
+
+                        </v-col>
+                        <v-col md="6" sm="12">
+                            <v-img contain height="150px" v-if="backdropImg" :src="backdropImg"></v-img>
+                        </v-col>
+                    </v-row>
 
                     <v-btn color="primary" ripple block class="mt-5" :disabled="!valid" @click="submit"
                            :loading="formLoading">ذخیره
                     </v-btn>
 
                 </v-card>
-            </v-col>
-        </v-row>
-    </v-form>
 
+            </v-form>
+        </v-col>
+    </v-row>
 </template>
 
 
@@ -87,9 +142,13 @@
         components: {MyEditor},
         data() {
             return {
+                posterImg: null,
+                backdropImg: null,
+                tagIsLoading: false,
                 isLoading: false,
                 formLoading: false,
                 searchCat: null,
+                searchTags: null,
                 valid: false,
                 form: {
                     content: '',
@@ -97,6 +156,8 @@
                     tags: [],
                     status: [],
                     title: '',
+                    poster: [],
+                    backdrop: [],
                     excerpt: '',
                     id: this.$route.params.id,
                 },
@@ -109,6 +170,12 @@
                 titleRules: [
                     v => !!v || 'عنوان الزامی است',
                     v => v.length >= 3 || 'حداقل 6 کاراکتر الزامی است',
+                ],
+                posterRule: [
+                    v => this.posterImg !== null || 'پوستر الزامی است',
+                ],
+                backdropRule: [
+                    v => this.backdropImg !== null || 'تصویر عمودی الزامی است',
                 ],
                 excerptRule: [
                     v => !!v || 'عنوان الزامی است',
@@ -135,35 +202,85 @@
             }
         },
         methods: {
+            posterSelected($event) {
+                console.log($event)
+            },
             submit() {
                 this.formLoading = true;
-                console.log(this.form)
-                axios.post('/admin/contents/posts/' + this.$route.params.id + '/update', this.form).then(r => {
+
+                var postData = JSON.stringify(this.form);
+                var form_data = new FormData();
+                form_data.append("form", postData);
+                form_data.append("poster", this.form.poster);
+                form_data.append("backdrop", this.form.backdrop);
+                axios.post('/admin/contents/posts/' + this.$route.params.id + '/update', form_data, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(r => {
                     this.$router.push({name: 'posts.index'});
                 })
             }
         },
         watch: {
-            searchCat(val) {
-                if (this.isLoading) return
-                this.isLoading = true
-                // Lazily load input items
+            'form.poster': function (newVal, oldVal) {
+                if (newVal === null) {
+                    return this.posterImg = this.form.posterImg.url;
+                }
+                this.posterImg = URL.createObjectURL(newVal);
+            },
+            'form.backdrop': function (newVal, oldVal) {
+                if (newVal === null) {
+                    return this.backdropImg = this.form.backdropImg.url;
+                }
+                this.backdropImg = URL.createObjectURL(newVal);
+            },
+            searchCat: {
+                handler(val) {
 
-                axios.post('/admin/contents/categories/search', {val})
-                    .then(res => {
-                        this.count = res.data.length
-                        this.catItems = res.data.data
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                    .finally(() => (this.isLoading = false))
+                    if (this.isLoading) return
+                    this.isLoading = true
+                    // Lazily load input items
+
+                    axios.post('/admin/contents/categories/search', {val})
+                        .then(res => {
+                            this.count = res.data.length
+                            this.catItems = res.data.data
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                        .finally(() => (this.isLoading = false))
+                },
+                immediate: true
+            },
+            searchTags: {
+                handler(val) {
+
+                    if (this.tagIsLoading) return
+                    this.tagIsLoading = true
+                    // Lazily load input items
+
+                    axios.post('/admin/contents/posts/search-tags', {val})
+                        .then(res => {
+                            this.count = res.data.length
+                            this.tagItems = res.data.data
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                        .finally(() => (this.tagIsLoading = false))
+                },
+                immediate: true
             }
         },
 
         mounted() {
             axios.post('/admin/contents/posts/' + this.$route.params.id + '/edit').then(r => {
+                console.log(r.data.data)
                 this.form = r.data.data;
+                this.posterImg = r.data.data.posterImg.url;
+                this.backdropImg = r.data.data.backdropImg.url;
                 this.catItems = r.data.data.categoryItems;
                 this.statusItems = r.data.data.statusItems;
             })

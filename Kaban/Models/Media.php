@@ -17,6 +17,7 @@ class Media extends Model {
         'url',
         'disk',
         'path',
+        'type',
         'user_id',
         'created_by',
         'updated_by',

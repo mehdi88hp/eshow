@@ -19,6 +19,10 @@ Route::group( [
                 'as'   => 'posts.search',
                 'uses' => 'PostsController@search'
             ] );
+            Route::post( '/posts/search-tags', [
+                'as'   => 'posts.searchTags',
+                'uses' => 'PostsController@searchTags'
+            ] );
             Route::post( '/posts/{id}/edit', [
                 'as'   => 'posts.edit',
                 'uses' => 'PostsController@edit'

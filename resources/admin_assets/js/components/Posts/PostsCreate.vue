@@ -1,15 +1,16 @@
 <template>
-    <v-form
-        ref="form"
-        v-model="valid"
-        @submit="submit"
-    >
-        <v-row justify="center">
-            <v-col
-                cols="12"
-                md="8"
-                sm="10"
+    <v-row justify="center">
+        <v-col
+            cols="12"
+            md="8"
+            sm="10"
+        >
+            <v-form
+                ref="form"
+                v-model="valid"
+                @submit="submit"
             >
+
                 <v-card class="pa-5">
                     <v-text-field
                         label="عنوان"
@@ -29,10 +30,11 @@
                     <v-row>
                         <v-col md="6" sm="12">
                             <v-combobox
-                                v-model="form.tag"
+                                v-model="form.tags"
                                 :items="tagItems"
                                 :rules="tagRules"
-                                @change="checkTag"
+                                :loading="tagIsLoading"
+                                :search-input.sync="searchTags"
                                 chips
                                 deletable-chips
                                 multiple
@@ -55,15 +57,67 @@
                         <v-label class="ma-5"><h3>متن</h3></v-label>
                     </v-col>
                     <my-editor v-model="form.content"></my-editor>
-                    <!--                    <label v-if="contentError">{{contentError}}</label>-->
+                    <v-row>
+                        <v-col md="6" sm="12">
+                            <v-file-input
+                                v-model="form.poster"
+                                ref="poster"
+                                placeholder="انتخاب پوستر"
+                                label=" پوستر"
+                                prepend-icon="mdi-paperclip"
+                                :rules="posterRule"
+                            >
+                                <template v-slot:selection="{ text }">
+                                    <v-chip
+                                        small
+                                        label
+                                        color="primary"
+                                    >
+                                        {{ text }}
+                                    </v-chip>
+                                </template>
+                            </v-file-input>
 
-                    <v-btn color="primary" ripple block class="mt-5" :disabled="!valid" @click="submit">ذخیره</v-btn>
+                        </v-col>
+                        <v-col md="6" sm="12">
+                            <v-img contain height="150px" v-if="posterImg" :src="posterImg"></v-img>
+                        </v-col>
+
+                    </v-row>
+                    <v-row>
+                        <v-col md="6" sm="12">
+                            <v-file-input
+                                v-model="form.backdrop"
+                                placeholder="انتخاب تصویر عمودی"
+                                label="تصویر عمودی"
+                                prepend-icon="mdi-paperclip"
+                                :rules="backdropRule"
+                            >
+                                <template v-slot:selection="{ text }">
+                                    <v-chip
+                                        small
+                                        label
+                                        color="primary"
+                                    >
+                                        {{ text }}
+                                    </v-chip>
+                                </template>
+                            </v-file-input>
+
+                        </v-col>
+                        <v-col md="6" sm="12">
+                            <v-img contain height="150px" v-if="backdropImg" :src="backdropImg"></v-img>
+                        </v-col>
+                    </v-row>
+                    <v-btn color="primary" ripple block class="mt-5" :disabled="!valid" @click="submit"
+                           :loading="formLoading">ذخیره
+                    </v-btn>
 
                 </v-card>
-            </v-col>
-        </v-row>
-    </v-form>
 
+            </v-form>
+        </v-col>
+    </v-row>
 </template>
 
 
@@ -77,13 +131,18 @@
         components: {MyEditor},
         data() {
             return {
+                formLoading: false,
+                backdropImg: null,
+                posterImg: null,
+                searchTags: false,
+                tagIsLoading: false,
                 isLoading: false,
                 searchCat: null,
                 valid: false,
                 form: {
                     content: '',
                     categories: [],
-                    tag: [],
+                    tags: [],
                     title: '',
                     excerpt: '',
                 },
@@ -109,7 +168,13 @@
                 ],
                 categoryRules: [
                     v => !!this.catItems.length || 'انتخاب دسته بندی الزامی است',
-                ]
+                ],
+                posterRule: [
+                    v => this.posterImg !== null || 'پوستر الزامی است',
+                ],
+                backdropRule: [
+                    v => this.backdropImg !== null || 'تصویر عمودی الزامی است',
+                ],
             }
         },
         computed: {
@@ -118,39 +183,72 @@
             }
         },
         methods: {
-            checkTag() {
-                console.log(23424, this.tags, this.content, 888)
-            },
             submit() {
                 this.formLoading = true;
-                axios.post('/admin/contents/posts/store', this.form).then(r => {
+                var postData = JSON.stringify(this.form);
+                var form_data = new FormData();
+                form_data.append("form", postData);
+                form_data.append("poster", this.form.poster);
+                form_data.append("backdrop", this.form.backdrop);
+                axios.post('/admin/contents/posts/store', form_data, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(r => {
                     this.$router.push({name: 'posts.index'});
                 })
             }
         },
         watch: {
-            searchCat(val) {
-                if (this.isLoading) return
-                this.isLoading = true
-                // Lazily load input items
-                axios.post('/admin/contents/categories/search', {val})
-                    .then(res => {
-                        this.count = res.data.length
-                        this.catItems = res.data.data
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                    .finally(() => (this.isLoading = false))
+            'form.poster': function (newVal, oldVal) {
+                if (newVal === null) {
+                    return this.posterImg = null;
+                }
+                this.posterImg = URL.createObjectURL(newVal);
             },
-            mounted() {
+            'form.backdrop': function (newVal, oldVal) {
+                if (newVal === null) {
+                    return this.backdropImg = null;
+                }
+                this.backdropImg = URL.createObjectURL(newVal);
+            },
+            searchCat: {
+                handler(val) {
+                    if (this.isLoading) return
+                    this.isLoading = true
+                    // Lazily load input items
+                    axios.post('/admin/contents/categories/search', {val})
+                        .then(res => {
+                            this.count = res.data.length
+                            this.catItems = res.data.data
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                        .finally(() => (this.isLoading = false))
+                }
+                , immediate: true
+            },
+            searchTags: {
+                handler(val) {
 
+                    if (this.tagIsLoading) return
+                    this.tagIsLoading = true
+                    // Lazily load input items
+
+                    axios.post('/admin/contents/posts/search-tags', {val})
+                        .then(res => {
+                            this.count = res.data.length
+                            this.tagItems = res.data.data
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
+                        .finally(() => (this.tagIsLoading = false))
+                },
+                immediate: true
             }
         },
-
-        mounted() {
-
-        }
     }
 </script>
 

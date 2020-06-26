@@ -27,7 +27,8 @@ class CreateMediaTable extends Migration {
             $table->timestamp( 'approved_at' )->nullable();
             $table->string( 'thumbnail_full_path', 511 )->nullable();
             $table->string( 'thumbnail_url' )->nullable();
-            $table->tinyInteger( 'status' );
+            $table->unsignedTinyInteger( 'type' )->index();
+            $table->tinyInteger( 'status' )->index();
             $table->bigInteger( 'created_by' )->unsigned()->nullable();
             $table->bigInteger( 'updated_by' )->unsigned()->nullable();
             $table->timestamps();

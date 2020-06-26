@@ -7,6 +7,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Kaban\Core\Enums\EState;
 use Kaban\General\Enums\EMediaStatus;
+use Kaban\General\Enums\EMediaType;
 use Kaban\Models\Media;
 
 class MediaService {
@@ -26,24 +27,32 @@ class MediaService {
 
     }
 
+    public function uploadThumb( MediaFile $file ) {
+
+        return $this->uploader->uploadThumbnail( $file );
+
+    }
+
     public function createMedia( MediaFile $file, $data = null, $user = null ) {
         $url   = $this->host . '/' . trim( $file->getFullPath(), '/ \\' );
         $user  = $user ?: \Auth::user();
         $media = Media::query()->create( [
-            'name'        => Arr::get( $data, 'name', $file->getName() ),
-            'title'       => Arr::get( $data, 'title', $file->getTitle() ?: $file->getName() ),
-            'description' => Arr::get( $data, 'description', '' ),
-            'mime_type'   => $file->getMimetype(),
-            'disk'        => $this->uploader->getDisk(),
-            'user_id'     => $user ? $user->id : null,
-            'created_by'  => $user ? $user->id : null,
-            'updated_by'  => $user ? $user->id : null,
-            'path'        => $file->getPath(),
-            'status'      => Arr::get( $data, 'status', EMediaStatus::approved ),
-            'url'         => $url,
-            'approved_at' => Arr::get( $data, 'approved_at', null ),
-            'old_id'      => $data['old_id'] ?? null,
-            'ordering'    => $data['ordering'] ?? null,
+            'name'                => Arr::get( $data, 'name', $file->getName() ),
+            'title'               => Arr::get( $data, 'title', $file->getTitle() ?: $file->getName() ),
+            'description'         => Arr::get( $data, 'description', '' ),
+            'type'                => Arr::get( $data, 'type', EMediaType::gallery ),
+            'mime_type'           => $file->getMimetype(),
+            'disk'                => $this->uploader->getDisk(),
+            'user_id'             => $user ? $user->id : null,
+            'thumbnail_full_path' => Arr::get( $data, 'thumbnail_full_path', null ),
+            'created_by'          => $user ? $user->id : null,
+            'updated_by'          => $user ? $user->id : null,
+            'path'                => $file->getPath(),
+            'status'              => Arr::get( $data, 'status', EMediaStatus::approved ),
+            'url'                 => $url,
+            'approved_at'         => Arr::get( $data, 'approved_at', null ),
+            'old_id'              => $data['old_id'] ?? null,
+            'ordering'            => $data['ordering'] ?? null,
         ] );
 
         return $media;

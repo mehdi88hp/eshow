@@ -51,7 +51,10 @@ class Post extends Model {
         return $this->morphToMany( Tag::class, 'taggable' );
     }
 
-    public function syncTags( $tags ) {
+    public function syncTags( $arr ) {
+        foreach ( $arr as $tag ) {
+            $tags[] = isset( $tag->text ) ? $tag->text : $tag;
+        }
         $existed_tags    = Tag::whereIn( 'name', $tags )->where( 'type', ETagType::post )->get();
         $tagIdsToAttach  = $existed_tags->pluck( 'id' )->toArray();
         $existedTagNames = $existed_tags->pluck( 'name' )->toArray();

@@ -31,10 +31,18 @@
                         </div>
                     </label>
                 </v-card>
-                <v-card class="mt-5" v-if="serverImages.length">
+                <v-card class="mt-5" v-if="localImages.length">
                     <v-row justify="space-around">
-                        <v-col cols="12" md="3" sm="12" v-for="image in serverImages" :key="image.id">
-                            <v-img :src="image.url" aspect-ratio="1.7"></v-img>
+                        <v-col cols="12" md="3" sm="12" v-for="image in localImages" :key="image.id">
+                            <v-img :src="image.url" aspect-ratio="1.7" @mouseleave="hideBtn($event)"
+                                   @mouseover="showBtn($event)">
+                                <v-btn color="error" @click="remove(image)" small class="delete-btn">
+                                    <v-icon
+                                    >
+                                        mdi-delete
+                                    </v-icon>
+                                </v-btn>
+                            </v-img>
                         </v-col>
                     </v-row>
                 </v-card>
@@ -61,14 +69,17 @@
         props: {
             serverImages: {
                 default: [],
-            }
+            },
+            postID: null,
+            postType: {
+                default: 'Post',
+            },
         },
         data() {
             return {
-                // serverImages: [],
-                localImages: [],
                 singleUploadPercentages: [],
                 snackbar: false,
+                localImages: [],
                 imageDraggedIn: false,
                 snackbarText: 'snackbarText',
                 maximum_images_count: 5,
@@ -79,6 +90,25 @@
             this.snackbarText = text;
         },
         methods: {
+            showBtn($event) {
+                $($event.target).find('.delete-btn').show();
+            },
+            hideBtn($event) {
+                $($event.target).find('.delete-btn').hide();
+            },
+            remove(file) {
+                axios.post('/admin/contents/media/remove', {
+                    id: file.id,
+                    postID: this.postID,
+                    postType: this.postType,
+                }).then(r => {
+                    console.log(r)
+                    this.localImages = r.data.all;
+                }).catch(err => {
+                    console.log('error', err);
+                })
+                console.log(666, file)
+            },
             imageDropped(e) {
                 console.log(e, e.dataTransfer.files)
                 this.initiateUpload(e.dataTransfer.files)
@@ -94,7 +124,6 @@
                 image.onerror = function () { //this can somehow check mimetype
                     ValidImage = false;
                     return proceed();
-
                 };
                 var url = window.URL || window.webkitURL;
                 image.src = url.createObjectURL(item);
@@ -104,6 +133,7 @@
                         this.snc('فایل مورد نظر شما معتبر نیست')
                         return false;
                     }
+
                     if (item.size > (20 * 1024 * 1024)) {
                         toastr.error(window.err_img_size);
                         this.snc('فایل مورد نظر شما از 20 مگابایت بزرگتر است')
@@ -116,11 +146,12 @@
             initiateUpload(files) {
                 for (let item of files) {
                     this.checkValidFile(item, () => {
-                        this.localImages.push(item);
 
                         let formData = new FormData();
 
-                        formData.append('item', item);
+                        formData.append('file', item);
+                        formData.append('postType', this.postType);
+                        formData.append('postID', this.postID);
                         $.ajax({
                             url: '/admin/contents/media/upload',
                             data: formData,
@@ -145,18 +176,13 @@
                             success: (response) => {
                                 console.log(response.media);
                                 // this.serverImages.push(response.media.url)
-                                this.serverImages = response.all
+                                this.localImages = response.all;
                                 this.singleUploadPercentages = 0;
-                                // this.$store.state.form.media.push(response.media);
-
                             },
                             error: (error, xhr) => {
                                 // this.$store.commit('showModal', false)
                             }
                         }).always(() => {
-                            // toastr.clear();
-                            // $('#submit-crop').removeAttr('disabled');
-
                         });
                     })
                 }
@@ -166,10 +192,12 @@
                 document.getElementById("select_img").value = null;
             },
             determineDragAndDropCapable() {
+
                 /*
                   Create a test element to see if certain events
                   are present that let us do drag and drop.
                 */
+
                 var div = document.createElement('div');
 
                 /*
@@ -229,12 +257,13 @@
             submit() {
             },
         },
+        watch: {
+            serverImages(val) {
+                this.localImages = val
+            }
+        },
         mounted() {
             this.mountDragAndDrop();
-            // axios.post('/admin/contents/media/get-all').then(r => {
-            //     this.serverImages = r.data.data
-            //     console.log(r)
-            // })
         }
     }
 </script>
@@ -243,5 +272,9 @@
     .upload-box {
         border: 2px dashed #ccc;
         height: 150px;
+    }
+
+    .delete-btn {
+        display: none;
     }
 </style>

@@ -32,7 +32,7 @@
         name: "MediaCreate",
         data() {
             return {
-                posts: [],
+                posts: null,
                 postItems: [],
                 postRules: [],
                 isLoading: false,
@@ -55,6 +55,9 @@
                         .then(res => {
                             this.postItems = res.data.data
                             this.count = res.data.length
+                            if (this.posts == null) {
+                                this.posts = this.postItems[0].value;
+                            }
                         })
                         .catch(err => {
                             console.log(err)
@@ -66,7 +69,3 @@
         },
     }
 </script>
-
-<style scoped>
-
-</style>

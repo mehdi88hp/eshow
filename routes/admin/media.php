@@ -17,6 +17,10 @@ Route::group( [
                 'as'   => 'media.all',
                 'uses' => 'MediaController@all'
             ] );
+            Route::post( '/media/remove', [
+                'as'   => 'media.destroy',
+                'uses' => 'MediaController@destroy'
+            ] );
         } );
     } );
 } );
