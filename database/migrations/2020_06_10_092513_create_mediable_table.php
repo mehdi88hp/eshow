@@ -4,28 +4,30 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMediableTable extends Migration {
+class CreateMediableTable extends Migration
+{
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up() {
+    public function up()
+    {
 
-        Schema::create( 'mediables', function ( Blueprint $table ) {
-            $table->increments( 'id' );
-            $table->bigInteger( 'media_id' )->unsigned();
-            $table->morphs( 'mediable' );
-            $table->string( 'album' )->nullable();
-            $table->text( 'tags' )->nullable();
-            $table->text( 'data' )->nullable();
+        Schema::create('mediables', function (Blueprint $table) {
+            $table->increments('id');
+            $table->bigInteger('media_id')->unsigned();
+            $table->morphs('mediable');
+            $table->string('album')->nullable();
+            $table->text('tags')->nullable();
+            $table->text('data')->nullable();
             $table->timestamps();
 
-            $table->foreign( 'media_id' )
-                  ->references( 'id' )
-                  ->on( 'media' )
-                  ->onDelete( 'cascade' );
-        } );
+            $table->foreign('media_id')
+                ->references('id')
+                ->on('media')
+                ->onDelete('cascade');
+        });
     }
 
     /**
@@ -33,10 +35,11 @@ class CreateMediableTable extends Migration {
      *
      * @return void
      */
-    public function down() {
+    public function down()
+    {
         Schema::disableForeignKeyConstraints();
 
-        Schema::dropIfExists( 'mediables' );
+        Schema::dropIfExists('mediables');
 
         Schema::enableForeignKeyConstraints();
     }

@@ -5,23 +5,23 @@
                 پست ها
                 <v-spacer></v-spacer>
                 <v-text-field
-                    v-model="search"
-                    append-icon="mdi-magnify"
-                    label="Search"
-                    single-line
-                    hide-details
+                        v-model="search"
+                        append-icon="mdi-magnify"
+                        label="Search"
+                        single-line
+                        hide-details
 
                 ></v-text-field>
             </v-card-title>
             <v-data-table
-                :headers="headers"
-                :items="items"
-                :options.sync="options"
-                :server-items-length="total"
-                :search="search"
-                :loading="loading"
-                class="elevation-1"
-                :footer-props="{
+                    :headers="headers"
+                    :items="items"
+                    :options.sync="options"
+                    :server-items-length="total"
+                    :search="search"
+                    :loading="loading"
+                    class="elevation-1"
+                    :footer-props="{
                         itemsPerPageText:'آیتم در هر صفحه',
                         pageText:perpageText
                     }"
@@ -50,7 +50,7 @@
 
 <script>
 
-    import ConfirmDelete from "../shared/ConfirmDelete";
+    import ConfirmDelete from "../Shared/ConfirmDelete";
 
     export default {
         name: "CategoriesList",

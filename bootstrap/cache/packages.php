@@ -1,23 +1,13 @@
 <?php return array (
-  'nesbot/carbon' => 
+  'barryvdh/laravel-debugbar' => 
   array (
     'providers' => 
     array (
-      0 => 'Carbon\\Laravel\\ServiceProvider',
+      0 => 'Barryvdh\\Debugbar\\ServiceProvider',
     ),
-  ),
-  'fideloper/proxy' => 
-  array (
-    'providers' => 
+    'aliases' => 
     array (
-      0 => 'Fideloper\\Proxy\\TrustedProxyServiceProvider',
-    ),
-  ),
-  'laravel/tinker' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Laravel\\Tinker\\TinkerServiceProvider',
+      'Debugbar' => 'Barryvdh\\Debugbar\\Facade',
     ),
   ),
   'facade/ignition' => 
@@ -31,36 +21,11 @@
       'Flare' => 'Facade\\Ignition\\Facades\\Flare',
     ),
   ),
-  'nunomaduro/collision' => 
+  'fideloper/proxy' => 
   array (
     'providers' => 
     array (
-      0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    ),
-  ),
-  'barryvdh/laravel-debugbar' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Barryvdh\\Debugbar\\ServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'Debugbar' => 'Barryvdh\\Debugbar\\Facade',
-    ),
-  ),
-  'laravel/ui' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Laravel\\Ui\\UiServiceProvider',
-    ),
-  ),
-  'kalnoy/nestedset' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Kalnoy\\Nestedset\\NestedSetServiceProvider',
+      0 => 'Fideloper\\Proxy\\TrustedProxyServiceProvider',
     ),
   ),
   'intervention/image' => 
@@ -72,6 +37,41 @@
     'aliases' => 
     array (
       'Image' => 'Intervention\\Image\\Facades\\Image',
+    ),
+  ),
+  'kalnoy/nestedset' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Kalnoy\\Nestedset\\NestedSetServiceProvider',
+    ),
+  ),
+  'laravel/tinker' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Tinker\\TinkerServiceProvider',
+    ),
+  ),
+  'laravel/ui' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Ui\\UiServiceProvider',
+    ),
+  ),
+  'nesbot/carbon' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Carbon\\Laravel\\ServiceProvider',
+    ),
+  ),
+  'nunomaduro/collision' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
     ),
   ),
 );
