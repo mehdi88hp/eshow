@@ -7,61 +7,21 @@
         >
             <v-list dense>
                 <v-list-group
-                    prepend-icon="mdi-newspaper"
-                    value="1"
+                    v-for="(menu,i) in menus"
+                    :prepend-icon="menu.icon"
+                    :key="i"
+                    v-model="menu.active"
+                    no-action
                 >
                     <template v-slot:activator>
-                        <v-list-item-title>پست ها</v-list-item-title>
+                        <v-list-item-title>{{menu.title}}</v-list-item-title>
                     </template>
-                    <v-list-item link :to="{name:'posts.index'}">
-                        <v-list-item-action>
-                            <v-icon>mdi-newspaper-variant</v-icon>
-                        </v-list-item-action>
+                    <v-list-item v-for="(child,j) in menu.children" :key="j" link :to="child.link">
                         <v-list-item-content>
-                            <v-list-item-title>لیست</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                    <v-list-item link :to="{name:'posts.create'}">
-                        <v-list-item-action>
-                            <v-icon>mdi-new-box</v-icon>
-                        </v-list-item-action>
-                        <v-list-item-content>
-                            <v-list-item-title>پست جدید</v-list-item-title>
+                            <v-list-item-title>{{child.title}}</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                 </v-list-group>
-                <v-list-group
-                    prepend-icon="mdi-order-bool-ascending"
-                    value="2"
-                >
-                    <template v-slot:activator>
-                        <v-list-item-title>دسته بندی ها</v-list-item-title>
-                    </template>
-                    <v-list-item link :to="{name:'categories.index'}">
-                        <v-list-item-action>
-                            <v-icon>mdi-order-alphabetical-ascending</v-icon>
-                        </v-list-item-action>
-                        <v-list-item-content>
-                            <v-list-item-title>لیست</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                    <v-list-item link :to="{name:'categories.create'}">
-                        <v-list-item-action>
-                            <v-icon>mdi-new-box</v-icon>
-                        </v-list-item-action>
-                        <v-list-item-content>
-                            <v-list-item-title>دسته بندی جدید</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                </v-list-group>
-                <v-list-item link :to="{name:'media.create'}">
-                    <v-list-item-action>
-                        <v-icon>mdi-order-alphabetical-ascending</v-icon>
-                    </v-list-item-action>
-                    <v-list-item-content>
-                        <v-list-item-title>گالری</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
             </v-list>
         </v-navigation-drawer>
 
@@ -106,6 +66,99 @@
         },
         data: () => ({
             drawer: null,
+            selectedMenu: 2,
+            menus: [
+                {
+                    icon: 'mdi-newspaper',
+                    title: 'پست ها',
+                    active: false,
+                    children: [
+                        {
+                            title: 'لیست',
+                            link: {name: 'posts.index'},
+                        },
+                        {
+                            title: 'پست جدید',
+                            link: {name: 'posts.create'},
+                        }
+                    ],
+                },
+                {
+                    icon: 'mdi-newspaper',
+                    title: 'کاربران',
+                    active: false,
+                    children: [
+                        {
+                            title: 'لیست',
+                            link: {name: 'users.index'},
+                        },
+                    ],
+                },
+                {
+                    icon: 'mdi-newspaper',
+                    title: 'دسترسی و نقش',
+                    active: false,
+                    children: [
+                        {
+                            title: 'لیست دسترسی ها',
+                            link: {name: 'permissions.index'},
+                        },
+                        {
+                            title: 'دسترسی جدید',
+                            link: {name: 'permissions.create'},
+                        },
+                        {
+                            title: 'لیست نقش ها',
+                            link: {name: 'roles.index'},
+                        },
+                        {
+                            title: 'نقش جدید',
+                            link: {name: 'roles.create'},
+                        },
+                    ],
+                },
+                {
+                    icon: 'mdi-newspaper',
+                    title: 'دسته بندی ها',
+                    active: false,
+                    children: [
+                        {
+                            title: 'لیست',
+                            link: {name: 'categories.index'},
+                        },
+                        {
+                            title: 'دسته بندی جدید',
+                            link: {name: 'categories.create'},
+                        }
+                    ],
+                },
+                {
+                    icon: 'mdi-newspaper',
+                    title: 'گالری',
+                    active: false,
+                    children: [
+                        {
+                            title: 'لیست',
+                            link: {name: 'media.create'},
+                        },
+                    ],
+                }
+            ]
         }),
+        methods: {
+            activateActiveListGroup() {
+                for (const [key, value] of Object.entries(this.menus)) {
+                    for (const [key2, value2] of Object.entries(value.children)) {
+                        if (value2.link && this.$route.name === value2.link.name) {
+                            this.menus[key].active = true
+                        }
+                    }
+                }
+            }
+        },
+        mounted() {
+            this.$vuetify.rtl = true;
+            this.activateActiveListGroup();
+        }
     }
 </script>

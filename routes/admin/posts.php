@@ -5,11 +5,6 @@ Route::group( [
 ], function () {
     Route::group( [ 'prefix' => 'admin' ], function () {
         Route::group( [ 'prefix' => 'contents', 'as' => 'admin.contents.' ], function () {
-            Route::get( '/{link?}', [
-                'as'   => 'posts.index',
-                'uses' => 'PostsController@index'
-            ] )
-                 ->where( 'link', '[^.]*' );
 
             Route::post( '/posts/store', [
                 'as'   => 'posts.store',

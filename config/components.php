@@ -6,11 +6,10 @@ return [
 
         ],
         'Admin'   => [
-            'Posts',
-            'Categories',
+            /*currently just work to render views*/
+            'Base',
         ],
         'Site'    => [
-//            'Homepage',
         ],
     ]
 ];

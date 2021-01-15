@@ -134,7 +134,7 @@
                 formLoading: false,
                 backdropImg: null,
                 posterImg: null,
-                searchTags: false,
+                searchTags: '',
                 tagIsLoading: false,
                 isLoading: false,
                 searchCat: null,

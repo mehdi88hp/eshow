@@ -37,4 +37,8 @@ class Category extends Model {
         return ( $this->parent ) ? $this->parent->title : '';
     }
 
+//    public function parent() {
+//        return $this->belongsTo( Category::class );
+//    }
+
 }

@@ -10,6 +10,7 @@ use Kaban\Components\Admin\Posts\Resources\GetAllPostsResource;
 use Kaban\Components\Admin\Posts\Resources\GetPostEditItemResource;
 use Kaban\Components\Admin\Posts\Resources\GetPostTagsResource;
 use Kaban\Components\Admin\Posts\Resources\GetSearchedPostsResource;
+use Kaban\Core\Controllers\AdminBaseController;
 use Kaban\General\Enums\EMediaType;
 use Kaban\General\Enums\EPostStatus;
 use Kaban\General\Enums\ETagType;
@@ -17,15 +18,11 @@ use Kaban\General\Services\Media\MediaService;
 use Kaban\Models\Post;
 use Kaban\Models\Tag;
 
-class PostsController {
+class PostsController extends AdminBaseController {
     private $mediaService;
 
     public function __construct( MediaService $mediaService ) {
         $this->mediaService = $mediaService;
-    }
-
-    public function index( Request $request ) {
-        return view( 'AdminPosts::index' );
     }
 
     public function edit( $id ) {

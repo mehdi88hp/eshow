@@ -8,14 +8,12 @@ use Illuminate\Http\Request;
 use Kaban\Components\Admin\Categories\Resources\GetAllCategoriesResource;
 use Kaban\Components\Admin\Categories\Resources\GetCategoryEditItemResource;
 use Kaban\Components\Admin\Categories\Resources\SearchResource;
+use Kaban\Core\Controllers\AdminBaseController;
 use Kaban\General\Enums\EPostStatus;
 use Kaban\Models\Category;
 use Kaban\Models\Post;
 
-class CategoriesController {
-    public function index() {
-        return view( 'AdminCategories::index' );
-    }
+class CategoriesController extends AdminBaseController {
 
     public function search( Request $request ) {
 
@@ -75,7 +73,13 @@ class CategoriesController {
     public function update( Request $request ) {
         $uid      = auth()->id();
         $category = Category::find( $request->id );
-//        dd( $request->all() );
+//        dump( $category->descendants->pluck( 'id' )->toArray() );
+//        if($category->des)
+        if ( in_array( $request->parent, $category->descendants->pluck( 'id' )->toArray() ) ) {
+            return response( [
+                'errorMsg' => 'این دسته بندی پدر قبلا به عنوان فرزند انتخاب شده است. لطفا آن را تغییر دهید.'
+            ] );
+        }
         $category->update( [
             'title'     => $request->title,
             'parent_id' => $request->parent,

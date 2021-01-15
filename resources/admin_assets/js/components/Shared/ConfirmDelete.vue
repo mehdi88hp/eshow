@@ -3,6 +3,19 @@
         v-model="dialog"
         max-width="290"
     >
+        <template v-slot:activator="{ on, attrs }">
+            <v-btn
+                color="error"
+                dark
+                v-bind="attrs"
+                v-on="on"
+            >
+                <v-icon
+                >
+                    mdi-delete
+                </v-icon>
+            </v-btn>
+        </template>
         <v-card>
             <v-card-title class="headline"></v-card-title>
 
@@ -33,25 +46,26 @@
 <script>
     export default {
         name: "ConfirmDelete",
+        data() {
+            return {
+                dialog: false
+            }
+        },
         props: {
             value: Boolean
         },
         methods: {
             clicked(isDeleted) {
                 this.dialog = false;
+                this.$emit('input', false);
                 if (isDeleted) {
                     this.$emit('deleteConfirmed', isDeleted)
                 }
             }
         },
-        computed: {
-            dialog: {
-                get() {
-                    return this.value
-                },
-                set(value) {
-                    this.$emit('input', value)
-                }
+        watch: {
+            value(val) {
+                this.dialog = val
             }
         }
     }

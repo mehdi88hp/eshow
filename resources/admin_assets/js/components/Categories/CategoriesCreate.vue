@@ -105,9 +105,6 @@
                         console.log(err)
                     })
                     .finally(() => (this.isLoading = false))
-            },
-            mounted() {
-
             }
         }
     }

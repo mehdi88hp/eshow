@@ -14,7 +14,6 @@
                     <v-text-field
                         label="عنوان"
                         v-model="form.title"
-                        reverse
                         :rules="titleRules"
                     ></v-text-field>
                     <v-row>
@@ -37,6 +36,23 @@
                 </v-card>
             </v-col>
         </v-row>
+        <v-snackbar
+            v-model="showSnack"
+            :timeout="2000"
+        >
+            {{ snackMsg }}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    color="red"
+                    text
+                    v-bind="attrs"
+                    @click="showSnack = false"
+                >
+                    Close
+                </v-btn>
+            </template>
+        </v-snackbar>
     </v-form>
 
 </template>
@@ -50,6 +66,8 @@
         data() {
             return {
                 valid: false,
+                showSnack: false,
+                snackMsg: '',
                 isLoading: false,
                 formLoading: false,
                 form: {
@@ -77,7 +95,18 @@
             submit() {
                 this.formLoading = true;
                 axios.post('/admin/contents/categories/' + this.$route.params.id + '/update', this.form).then(r => {
-                    this.$router.push({name: 'categories.index'});
+                    this.formLoading = false;
+                    if (r.data.errorMsg) {
+                        this.showSnack = true;
+                        this.snackMsg = r.data.errorMsg;
+                    } else {
+                        this.$router.push({name: 'categories.index'});
+                    }
+
+                }).catch((err, xx) => {
+                    console.log(err, xx)
+                    this.formLoading = false;
+
                 })
             }
         },
@@ -89,9 +118,9 @@
                 this.isLoading = true
 
                 // Lazily load input items
-                console.log(666, val)
                 axios.post('/admin/contents/categories/search', {val})
                     .then(res => {
+                        console.log(res.data)
                         this.count = res.data.length
                         this.catItems = res.data.data
                     })
@@ -99,7 +128,7 @@
                         console.log(err)
                     })
                     .finally(() => (this.isLoading = false))
-            },
+            }
 
         },
         mounted() {

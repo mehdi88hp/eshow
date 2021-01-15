@@ -148,7 +148,7 @@
                 isLoading: false,
                 formLoading: false,
                 searchCat: null,
-                searchTags: null,
+                searchTags: '',
                 valid: false,
                 form: {
                     content: '',
@@ -283,7 +283,7 @@
                 this.backdropImg = r.data.data.backdropImg.url;
                 this.catItems = r.data.data.categoryItems;
                 this.statusItems = r.data.data.statusItems;
-            })
+            });
         }
     }
 </script>

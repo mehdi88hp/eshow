@@ -5,9 +5,8 @@ namespace Kaban\Components\Admin\Dashboard\Controllers;
 
 
 use Illuminate\Http\Request;
+use Kaban\Core\Controllers\AdminBaseController;
 
-class DashboardController {
-    public function index(Request $request ) {
-        dd(123);
-    }
+class DashboardController extends AdminBaseController {
+
 }
