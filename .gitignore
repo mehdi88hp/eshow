@@ -9,6 +9,7 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
+/node_modules/
 /storage/*
 /storage/
 /storage/app/
@@ -16,3 +17,4 @@ yarn-error.log
 /storage/logs/
 /public/resources/
 /.idea/
+/vendor/
